@@ -146,7 +146,7 @@ plt.axis('equal')
 plt.show()
 
 
-# ... (Your existing code to read the data)
+# 
 
 # 1. Handle Missing Values
 HiringData['PreviousCompanies'] = HiringData['PreviousCompanies'].fillna(0)  # Or replace with a suitable value

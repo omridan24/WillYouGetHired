@@ -17,16 +17,14 @@ HiringData = pd.read_csv("Data/recruitment_data.csv")
 #our statistical significance level is alpha = 0.05
 alpha = 0.05
 
-#We Want to find out the connetction between The skills level of the candidate, and his/her acceptence rate.
 #################################
 # Question 1
 #################################
-#starting with the skiil score that the candidate got in their interview
+#We Want to find out the connetction between The skills level of the candidate, and his/her acceptence rate.
 #Our H0- Base assumption is that that Avg skill score of candidates that were accepted to work is 70
 mu_0 = 70
 
-
-# Here we will take only those who were excepted
+# Here we will take only those who were accepted
 accepted_candidates = HiringData[HiringData['HiringDecision'] == 1]
 
 # Finding the amount of accepted candidates
@@ -55,9 +53,9 @@ critical_value = t.ppf(1 - alpha/2, df=num_of_accepted_cands - 1)
 p_value = 2 * (1 - t.cdf(abs(t_statistic_skill), num_of_accepted_cands - 1)) 
 
 #The T-statistic is lower the the critical value t_statistic<critical_value so we reject the HO
-#*************** finished first test
+#################3 finished two tailed test
 
-# we think that you are going to need to have 60 in personality to get excepted. our new mu_0 is <=60,
+# we think that you are going to need to have 60 in personality to get accepted. our new mu_0 is <=60,
 mu_0 = 60
 #our H1 is that mu is > 60 
 
@@ -67,9 +65,9 @@ t_statistic_personality, p_value = ttest_1samp(accepted_candidates['PersonalityS
 
 critical_value = t.ppf(1 - alpha, num_of_accepted_cands - 1) 
 
-#we found that out t_statistic < critical value, so we except H0
+#we found that out t_statistic < critical value, so we accept H0
 
-#****************
+##################
 
 
 #Now our H0 for mu of distance of accepted candidates is 15 KM
@@ -110,7 +108,7 @@ unbiased_variance_for_very_experianced = np.var(very_experianced['SkillScore'], 
 #our unbiased_variance_for_very_experianced is 756.56
 #Now we will find the value of our chi stat for variance, assuming the our H0 is true
 chi_stat_var = (amount_of_very_experianced-1) * unbiased_variance_for_very_experianced / (var_h0 ** 2)
-# the chi value of our sample is 0.32, much lower then the critical value of 242.64 ,so we except our H0 with significance level "Ramat Muvhakut" of 0.05
+# the chi value of our sample is 0.32, much lower then the critical value of 242.64 ,so we accept our H0 with significance level "Ramat Muvhakut" of 0.05
 #let's find the P-value
 p_value = 1- chi2.cdf(chi_stat_var,amount_of_very_experianced-1)
 #the p_value is 1.0
