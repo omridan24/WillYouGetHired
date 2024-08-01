@@ -7,6 +7,10 @@ from scipy.stats import ttest_1samp
 from scipy.stats import t
 from scipy.stats import chi2
 from scipy.stats import norm
+from scipy import stats
+from scipy.stats import chi2_contingency
+
+
 
 
 
@@ -178,6 +182,48 @@ t_critical_bottom = -z_critical_top
 # let's find the  p-value (getting the result we got or bigger/smaller)
 p_value_two_tailed = 2 * (1-t.cdf(abs(t_statistic) ,amount_of_agressive_recruitmnent-1))
 #Our p-value is 0.00009, We reject it for sure because it is smaller the or significance level.
+
+
+#################################
+# Question 5
+#################################
+# After we saw the graph of the distribution of personallity score in Question 2, we suspect that the disterbiution is uniform.
+# We will now check if Personallity score is uniformally distrebiuted using hypothesis test.
+# our alpha stays 0.05 , our H0 is that it does distribute uniformally. 
+# our H1 is that it doesn't distribute uniformally.
+
+personallity_scores = HiringData['PersonalityScore']
+#making a list of the observed frequncies of each personallity score to later check if it distributes uniformally
+observed_frequencies = personallity_scores.value_counts()
+observed_frequencies_list = observed_frequencies.values.tolist()
+#the expected frequncies is the amount of all the scores divided by the amounts of each score (H0: distributes uniformmally)
+expected_freq = len(personallity_scores) / len(observed_frequencies_list)
+chi2_stat, p_value = stats.chisquare(f_obs=observed_frequencies_list, f_exp=[expected_freq] * len(observed_frequencies_list))
+#we found that our p_value is 0.615 which is bigger then our alpha 0.05 so we accept our H0 : the personallity scores distributes uniformmally.
+
+
+#################################
+# Question 6
+#################################
+
+# Our H0 is that the skill score is connected to the interview score, and has a significant affect on it.
+# We will divide the scores to groups of 10 (80-90, 90-100...)
+bins = [0,10,20,30,40,50,60,70,80,90,100]
+#Here we will discritisize skill score and interview score using the groups we created before. 
+HiringData['SkillScore_Discretized'] = pd.cut(HiringData['SkillScore'], bins=bins, labels=False)
+HiringData['InterviewScore_Discretized'] = pd.cut(HiringData['InterviewScore'], bins=bins, labels=False)
+#Now we'll test using chi 2 test on contigency table with the new columns
+contingency_table = pd.crosstab(HiringData['SkillScore_Discretized'], HiringData['InterviewScore_Discretized'])
+chi2, p_value, dof, expected = chi2_contingency(contingency_table)
+# we dound that the P-value is 0.498, which is way more then 0.05, so we reject the H0 ,there is not a strong connection between the two parameters.
+# This result makes us suspect that this data is not real.
+
+
+
+
+
+
+
 
 
 
