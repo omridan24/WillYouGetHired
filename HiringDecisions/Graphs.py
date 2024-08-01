@@ -13,7 +13,7 @@ plt.title("Box Plot of Distance from Company by Hiring Decision")
 plt.xlabel("Hiring Decision")
 plt.ylabel("Distance from Company")
 plt.grid(True)
-#plt.show()
+plt.show()
 
 plt.figure(figsize=(12, 8))
 sns.boxplot(x="HiringDecision", y="PersonalityScore", data=HiringData, palette='Set1')
@@ -21,9 +21,10 @@ plt.title("Box Plot of Personality Score by Hiring Decision")
 plt.xlabel("Hiring Decision")
 plt.ylabel("Personality Score")
 plt.grid(True)
-#plt.show()
+plt.show()
 
-# 1. Define Distance Bins/Groups
+
+# 1. Define Distance Bins
 HiringData['DistanceGroup'] = pd.cut(HiringData['DistanceFromCompany'], bins=[0, 5, 10, 20, np.inf], labels=['0-5', '5-10', '10-20', '20+'])
 
 # 2. Calculate Acceptance Rate per Group
@@ -31,21 +32,31 @@ AcceptanceRate = HiringData.groupby('DistanceGroup')['HiringDecision'].mean()
 
 # 3. Convert to Percentage and Display
 AcceptanceRate = AcceptanceRate * 100
+mean_of_Acceptence_by_dist = AcceptanceRate.mean()
 print("Acceptance Rate by Distance Group:")
 print(AcceptanceRate)
 
 # 4. Visualization (Bar Plot)
 plt.figure(figsize=(10, 6))
 AcceptanceRate.plot(kind='bar', color='skyblue')
+plt.axhline(mean_of_Acceptence_by_dist, color='red', linestyle='dashed', linewidth=1, label='Mean')  # Mean line
+plt.text(
+    1.02,  # Adjust x position for text placement (right of the plot)
+    mean_of_Acceptence_by_dist,  # y position aligned with the mean line
+    f'Mean: {mean_of_Acceptence_by_dist:.2f}',  # Format the mean value (e.g., 2 decimal places)
+    va='center',  # Vertical alignment: center of the text with the line
+    ha='left',  # Horizontal alignment: left-aligned text
+    transform=plt.gca().transData  # Transform to match data coordinates
+)
 plt.title('Acceptance Rate by Distance Group')
 plt.ylabel('Acceptance Rate (%)')
 plt.grid(axis='y')
 plt.show()
 
-print(HiringData.describe())
 
 
-# 1. Define Skill Score Bins/Groups (Adjust bins as needed)
+
+# 1. Define Skill Score Bins
 HiringData['SkillGroup'] = pd.cut(HiringData['SkillScore'], bins=[0, 25, 50, 75, 100], labels=['0-25', '25-50', '50-75', '75-100'])
 
 # 2. Calculate Acceptance Rate per Group
@@ -53,12 +64,20 @@ AcceptanceRateBySkill = HiringData.groupby('SkillGroup')['HiringDecision'].mean(
 
 # 3. Convert to Percentage and Display
 AcceptanceRateBySkill = AcceptanceRateBySkill * 100
-print("Acceptance Rate by Skill Group:")
-print(AcceptanceRateBySkill)
+mean_of_Acceptence_by_skill = AcceptanceRateBySkill.mean()
 
 # 4. Visualization (Bar Plot)
 plt.figure(figsize=(10, 6))
 AcceptanceRateBySkill.plot(kind='bar', color='lightgreen')
+plt.axhline(mean_of_Acceptence_by_skill, color='red', linestyle='dashed', linewidth=1, label='Mean')  # Mean line
+plt.text(
+    1.02,  # Adjust x position for text placement (right of the plot)
+    mean_of_Acceptence_by_skill,  # y position aligned with the mean line
+    f'Mean: {mean_of_Acceptence_by_skill:.2f}',  # Format the mean value (e.g., 2 decimal places)
+    va='center',  # Vertical alignment: center of the text with the line
+    ha='left',  # Horizontal alignment: left-aligned text
+    transform=plt.gca().transData  # Transform to match data coordinates
+)
 plt.title('Acceptance Rate by Skill Group')
 plt.ylabel('Acceptance Rate (%)')
 plt.grid(axis='y')
@@ -81,7 +100,7 @@ plt.axis('equal')  # Equal aspect ratio ensures a circular pie chart
 
 plt.show()
 
-# ... (Your existing code to read the data)
+
 
 # 1. Define Personality Score Bins/Groups (Adjust bins as needed)
 HiringData['PersonalityGroup'] = pd.cut(HiringData['PersonalityScore'], bins=[0, 25, 50, 75, 100], labels=['0-25', '25-50', '50-75', '75-100'])
