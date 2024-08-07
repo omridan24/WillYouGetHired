@@ -102,7 +102,7 @@ plt.show()
 
 
 
-# 1. Define Personality Score Bins/Groups (Adjust bins as needed)
+# 1. Define Personality Score Bins/Groups
 HiringData['PersonalityGroup'] = pd.cut(HiringData['PersonalityScore'], bins=[0, 25, 50, 75, 100], labels=['0-25', '25-50', '50-75', '75-100'])
 
 # 2. Calculate Acceptance Rate per Group
@@ -140,9 +140,9 @@ plt.show()
 
 
 
-# ... (Your existing code to read the data)
 
-# 1. Define Age Group Bins (using your custom bins and labels)
+
+# 1. Define Age Group Bins 
 bins = [20, 25, 30, 35, 40, 45, 50]
 labels = ['20-25', '25-30', '30-35', '35-40', '40-45', '45-50']
 
@@ -165,16 +165,17 @@ plt.axis('equal')
 plt.show()
 
 
-# 
+
+
 
 # 1. Handle Missing Values
-HiringData['PreviousCompanies'] = HiringData['PreviousCompanies'].fillna(0)  # Or replace with a suitable value
+HiringData['PreviousCompanies'] = HiringData['PreviousCompanies'].fillna(0)  
 
-# 2. Convert to Numeric (if necessary)
+# 2. Convert to Numeric 
 HiringData['PreviousCompanies'] = pd.to_numeric(HiringData['PreviousCompanies'], errors='coerce')
 HiringData['PreviousCompanies'] = HiringData['PreviousCompanies'].fillna(0)
 
-# 3. Define Groups based on Number of Previous Companies (adjust bins if needed)
+# 3. Define Groups based on Number of Previous Companies
 bins = [0, 1, 2, 3, np.inf]
 labels = ['No previous companies', '1 previous company', '2 previous companies', '3+ previous companies']
 HiringData['PreviousCompaniesGroup'] = pd.cut(HiringData['PreviousCompanies'], bins=bins, labels=labels)

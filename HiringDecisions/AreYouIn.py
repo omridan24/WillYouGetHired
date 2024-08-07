@@ -31,6 +31,7 @@ mu_0 = 70
 # Here we will take only those who were accepted
 accepted_candidates = HiringData[HiringData['HiringDecision'] == 1]
 
+
 # Finding the amount of accepted candidates
 num_of_accepted_cands = len(accepted_candidates)
 
@@ -74,7 +75,7 @@ critical_value = t.ppf(1 - alpha, num_of_accepted_cands - 1)
 ##################
 
 
-#Now our H0 for mu of distance of accepted candidates is 15 KM
+#Now our H0 for mu of distance of accepted candidates is 15 KM or more
 mu_0 = 15
 #Our H1 is that if distance is less then 15 KM we reject it
 #calculating the T statistic and p- value using the imported library
@@ -111,10 +112,12 @@ mean_skill_experianced = very_experianced['SkillScore'].mean()
 unbiased_variance_for_very_experianced = np.var(very_experianced['SkillScore'], ddof=1)
 #our unbiased_variance_for_very_experianced is 756.56
 #Now we will find the value of our chi stat for variance, assuming the our H0 is true
-chi_stat_var = (amount_of_very_experianced-1) * unbiased_variance_for_very_experianced / (var_h0 ** 2)
-# the chi value of our sample is 0.32, much lower then the critical value of 242.64 ,so we accept our H0 with significance level "Ramat Muvhakut" of 0.05
+chi_stat_var = (amount_of_very_experianced-1) * unbiased_variance_for_very_experianced / var_h0 
+# the chi value of our sample is 240.57,  lower then the critical value of 242.64 ,so we accept our H0 with significance level "Ramat Muvhakut" of 0.05
+print(chi_stat_var)
 #let's find the P-value
 p_value = 1- chi2.cdf(chi_stat_var,amount_of_very_experianced-1)
+
 #the p_value is 1.0
 
 
@@ -128,24 +131,27 @@ p_value = 1- chi2.cdf(chi_stat_var,amount_of_very_experianced-1)
 proportion_accepted = HiringData['HiringDecision'].mean()
 
 #we found that 0.31 were accepted.
-#We are going to check if there is a difference between male and female acceptence rate.
-#Using discritization we will take only female candidates
-#our H0 for acceptence rate of female candidates is 0.31
+#We are going to check if there is a difference between people in different ages
+#Using discritization we will split to age groups of 5(20-25,25-30...)
+#our H0 for acceptence rate of the group 25-30 is higher then the rest, because they are in their begining of their career and after their university studies
 p0 = 0.31
-only_female_candidates = HiringData[HiringData['Gender'] == 1]
-proportion_of_female_accepted = only_female_candidates['HiringDecision'].mean()
-number_of_female_tested =len(only_female_candidates)
+#Our H1 is that the acceptence rate will be lower
+#Define the age bins (starting from 20 and ending at 50)
+bins = [20, 25, 30, 35, 40, 45, 50] 
+labels = ['20-24', '25-29', '30-34', '35-39', '40-44', '45-49']
+HiringData['AgeGroup'] = pd.cut(HiringData['Age'], bins=bins,labels = labels, right=False)
+only_25_30_candidates = HiringData[HiringData['AgeGroup'] == '25-29']
+proportion_of_25_30_accepted = only_25_30_candidates['HiringDecision'].mean()
+number_of_25_30_candidates = len(only_25_30_candidates)
 #We found that the female acceptence rate is 0.308 in our sample
 #We want to calculate the Z value of the proportion we found
-z_proportion = (proportion_of_female_accepted - p0)/ np.sqrt(p0*(1-p0)/number_of_female_tested)
-#Now we will use the normal distribution table for finding the z value of our significance level
-z_critical_top =norm.ppf(1-alpha/2)
-z_critical_bottom = -z_critical_top
-#we found that the z_proportion of female is in our rejion of acceptence (between (-1.96 and 1.96)) so we except H0
+z_proportion = (proportion_of_25_30_accepted - p0)/ np.sqrt(p0*(1-p0)/number_of_25_30_candidates)
+#Now we will use the normal distribution table for finding the z value of our significance level(right tailed test)
+z_critical_bottom =-norm.ppf(1-alpha)
 #Now we will find the p-value for our test 
-p_value_two_tailed = 2 *(norm.cdf(z_proportion))
+p_value_right_tailed = (norm.cdf(z_proportion))
 
-#we found that our p-value is 0.9504, which is bigger than our significance level 0.95, so we for sure accept our H0
+#we found that our p-value is 0.957, which is bigger than our significance level 0.05, so we fail to recect H0
 
 #################################
 # Question 4
@@ -177,11 +183,11 @@ t_statistic = (mean_personallity_agrresive_recruitment_strategy - mu0) / (std_de
 # we found that the z_statistic is 3.33
 #the critical values are now tested using the T distribution
 t_critical_top =t.ppf(1-alpha/2 ,amount_of_agressive_recruitmnent-1 )
-t_critical_bottom = -z_critical_top
+t_critical_bottom = -t_critical_top
 #we found that the critical value is 1.965 which is lower then the t_statistic that we found, so we reject our H0, the Recruitment Strategy does not affect that much the personallity score
 # let's find the  p-value (getting the result we got or bigger/smaller)
 p_value_two_tailed = 2 * (1-t.cdf(abs(t_statistic) ,amount_of_agressive_recruitmnent-1))
-#Our p-value is 0.00009, We reject it for sure because it is smaller the or significance level.
+#Our p-value is 0.00009, which is smaller then our significance level, so we reject H0
 
 
 #################################
@@ -199,7 +205,7 @@ observed_frequencies_list = observed_frequencies.values.tolist()
 #the expected frequncies is the amount of all the scores divided by the amounts of each score (H0: distributes uniformmally)
 expected_freq = len(personallity_scores) / len(observed_frequencies_list)
 chi2_stat, p_value = stats.chisquare(f_obs=observed_frequencies_list, f_exp=[expected_freq] * len(observed_frequencies_list))
-#we found that our p_value is 0.615 which is bigger then our alpha 0.05 so we accept our H0 : the personallity scores distributes uniformmally.
+#we found that our p_value is 0.615 which is bigger then our alpha 0.05 so we fail to reject H0 the personallity scores distributes uniformmally.
 
 
 #################################
@@ -215,8 +221,18 @@ HiringData['InterviewScore_Discretized'] = pd.cut(HiringData['InterviewScore'], 
 #Now we'll test using chi 2 test on contigency table with the new columns
 contingency_table = pd.crosstab(HiringData['SkillScore_Discretized'], HiringData['InterviewScore_Discretized'])
 chi2, p_value, dof, expected = chi2_contingency(contingency_table)
-# we dound that the P-value is 0.498, which is way more then 0.05, so we reject the H0 ,there is not a strong connection between the two parameters.
-# This result makes us suspect that this data is not real.
+# we dound that the P-value is 0.498, which is way more then 0.05, so we fail reject the H0 ,there is not a strong connection between the two parameters.
+# Here we will show the results in a heat map
+contingency_table = pd.crosstab(HiringData['SkillScore_Discretized'], HiringData['InterviewScore_Discretized'])
+
+# Create heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(contingency_table, annot=True, fmt='d', cmap='YlGnBu', cbar_kws={'label': 'Count'})
+plt.title('Relationship Between Skill Score and Interview Score')
+plt.xlabel('Interview Score (Discretized)')
+plt.ylabel('Skill Score (Discretized)')
+plt.show()
+
 
 
 
