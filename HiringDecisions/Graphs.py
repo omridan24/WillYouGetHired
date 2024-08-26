@@ -193,5 +193,16 @@ plt.figure(figsize=(8, 8))
 plt.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', startangle=140, shadow=True)
 plt.title('Acceptance Rate by Number of Previous Companies', fontsize=14)
 plt.axis('equal')
-
 plt.show()
+
+#Creating heatmap:
+def show_skill_to_interview_contigency(contingency_table):
+
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(contingency_table, annot=True, fmt='d', cmap='YlGnBu', cbar_kws={'label': 'Count'})
+    plt.title('Relationship Between Skill Score and Interview Score')
+    plt.xlabel('Interview Score (Discretized)')
+    plt.ylabel('Skill Score (Discretized)')
+    plt.show()
+
+
