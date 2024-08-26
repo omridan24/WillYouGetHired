@@ -117,7 +117,7 @@ chi_stat_var = (amount_of_very_experianced-1) * unbiased_variance_for_very_exper
 #let's find the P-value
 p_value = 1- chi2.cdf(chi_stat_var,amount_of_very_experianced-1)
 
-#the p_value is 1.0
+#the p_value is 0.06
 
 
 
@@ -223,7 +223,13 @@ chi2, p_value, dof, expected = chi2_contingency(contingency_table)
 #we found that the P-value is 0.498, which is way greater than 0.05, so we fail to reject the H0, there is no strong connection between the two parameters
 #here we will show the results in a heat map
 contingency_table = pd.crosstab(HiringData['SkillScore_Discretized'], HiringData['InterviewScore_Discretized'])
-Graphs.show_skill_to_interview_contigency(contingency_table)
+#if you want to see this graph, uncomment it.
+#Graphs.show_skill_to_interview_contigency(contingency_table)
+
+##################
+#Thank you!
+# Omri, Liza and Shana
+##################
 
 
 
